@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.40.1">
+    <meta name="project" content="tork_governance v0.1.0">
+
+
+    <title>Tork Governance Elixir SDK — tork_governance v0.1.0</title>
+
+    <link rel="stylesheet" href="dist/html-elixir-YJO4MOOW.css" />
+
+    <script defer src="dist/sidebar_items-41C1C818.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-YU4BZFVS.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+      <div>
+        <a href="TorkGovernance.html" class="sidebar-projectName" translate="no">
+tork_governance
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v0.1.0
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras="Pages"></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of tork_governance</span>
+            <div class="search-input-wrapper">
+              <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+              <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+                <i class="ri-close-line ri-lg" title="Cancel search"></i>
+              </button>
+            </div>
+          </label>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <div class="engine-selector" data-multiple="false">
+          <button type="button" class="engine-button" aria-label="Select search engine" aria-haspopup="true" aria-expanded="false">
+            <i class="ri-search-2-line" aria-hidden="true"></i>
+            <span class="engine-name">Default</span>
+            <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+          </button>
+          <div class="engine-dropdown" hidden role="menu">
+
+              <button type="button"
+                      class="engine-option"
+                      data-engine-url="search.html?q="
+                      role="menuitemradio"
+                      aria-checked="true">
+                <span class="name">Default</span>
+                <span class="help">In-browser search</span>
+              </button>
+
+          </div>
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>Tork Governance Elixir SDK</h1>
+
+<a href="readme.md" title="Copy Markdown (hold Ctrl/Cmd and click it to open as Markdown)" class="copy-markdown icon-action" rel="help">
+  <i class="ri-markdown-line" aria-hidden="true"></i>
+  <span class="sr-only">Copy Markdown</span>
+</a>
+
+
+      <a href="https://github.com/torkjacobs/tork-elixir-sdk/blob/main/README.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+  </div>
+
+
+<p>On-device AI governance with PII detection, redaction, and cryptographic receipts for Elixir and Phoenix applications.</p><h2 id="installation" class="section-heading"><a href="#installation" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Installation</span></h2><p>Add <code class="inline">tork_governance</code> to your list of dependencies in <code class="inline">mix.exs</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">deps</span><span class="w"> </span><span class="k" data-group-id="4361023423-1">do</span><span class="w">
+  </span><span class="p" data-group-id="4361023423-2">[</span><span class="w">
+    </span><span class="p" data-group-id="4361023423-3">{</span><span class="ss">:tork_governance</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 0.1.0&quot;</span><span class="p" data-group-id="4361023423-3">}</span><span class="w">
+  </span><span class="p" data-group-id="4361023423-2">]</span><span class="w">
+</span><span class="k" data-group-id="4361023423-1">end</span></code></pre><h2 id="quick-start" class="section-heading"><a href="#quick-start" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Quick Start</span></h2><pre><code class="makeup elixir" translate="no"><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">TorkGovernance</span><span class="o">.</span><span class="n">govern</span><span class="p" data-group-id="3520816954-1">(</span><span class="s">&quot;My SSN is 123-45-6789&quot;</span><span class="p" data-group-id="3520816954-1">)</span><span class="w">
+
+</span><span class="n">result</span><span class="o">.</span><span class="n">action</span><span class="w">        </span><span class="c1">#=&gt; :redact</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="w">        </span><span class="c1">#=&gt; &quot;My SSN is [SSN_REDACTED]&quot;</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">pii_detected</span><span class="w">  </span><span class="c1">#=&gt; [%{type: :ssn, match: &quot;123-45-6789&quot;}]</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">receipt</span><span class="w">       </span><span class="c1">#=&gt; %{receipt_id: &quot;rcpt_...&quot;, input_hash: &quot;sha256:...&quot;, ...}</span></code></pre><h2 id="pii-detection" class="section-heading"><a href="#pii-detection" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">PII Detection</span></h2><pre><code class="makeup elixir" translate="no"><span class="n">matches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">TorkGovernance.PII</span><span class="o">.</span><span class="n">detect</span><span class="p" data-group-id="1604592126-1">(</span><span class="s">&quot;Contact john@example.com or call 555-123-4567&quot;</span><span class="p" data-group-id="1604592126-1">)</span><span class="w">
+</span><span class="c1">#=&gt; [%{type: :email, match: &quot;john@example.com&quot;}, %{type: :phone, match: &quot;555-123-4567&quot;}]</span><span class="w">
+
+</span><span class="n">redacted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">TorkGovernance.PII</span><span class="o">.</span><span class="n">redact</span><span class="p" data-group-id="1604592126-2">(</span><span class="s">&quot;SSN: 123-45-6789&quot;</span><span class="p" data-group-id="1604592126-2">)</span><span class="w">
+</span><span class="c1">#=&gt; &quot;SSN: [SSN_REDACTED]&quot;</span></code></pre><h3 id="supported-pii-types" class="section-heading"><a href="#supported-pii-types" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Supported PII Types</span></h3><table><thead><tr><th style="text-align: left;">Type</th><th style="text-align: left;">Example</th><th style="text-align: left;">Redaction</th></tr></thead><tbody><tr><td style="text-align: left;">SSN</td><td style="text-align: left;">123-45-6789</td><td style="text-align: left;">[SSN_REDACTED]</td></tr><tr><td style="text-align: left;">Email</td><td style="text-align: left;">john@example.com</td><td style="text-align: left;">[EMAIL_REDACTED]</td></tr><tr><td style="text-align: left;">Phone</td><td style="text-align: left;">555-123-4567</td><td style="text-align: left;">[PHONE_REDACTED]</td></tr><tr><td style="text-align: left;">Credit Card</td><td style="text-align: left;">4111-1111-1111-1111</td><td style="text-align: left;">[CREDIT_CARD_REDACTED]</td></tr><tr><td style="text-align: left;">IP Address</td><td style="text-align: left;">192.168.1.1</td><td style="text-align: left;">[IP_REDACTED]</td></tr></tbody></table><h2 id="phoenix-integration" class="section-heading"><a href="#phoenix-integration" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Phoenix Integration</span></h2><h3 id="plug-pipeline" class="section-heading"><a href="#plug-pipeline" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Plug Pipeline</span></h3><p>Add the governance plug to your router pipeline:</p><pre><code class="makeup elixir" translate="no"><span class="n">pipeline</span><span class="w"> </span><span class="ss">:governed</span><span class="w"> </span><span class="k" data-group-id="1200050838-1">do</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">TorkGovernance.Plug</span><span class="w">
+</span><span class="k" data-group-id="1200050838-1">end</span><span class="w">
+
+</span><span class="n">scope</span><span class="w"> </span><span class="s">&quot;/api&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">MyAppWeb</span><span class="w"> </span><span class="k" data-group-id="1200050838-2">do</span><span class="w">
+  </span><span class="n">pipe_through</span><span class="w"> </span><span class="p" data-group-id="1200050838-3">[</span><span class="ss">:api</span><span class="p">,</span><span class="w"> </span><span class="ss">:governed</span><span class="p" data-group-id="1200050838-3">]</span><span class="w">
+  </span><span class="n">post</span><span class="w"> </span><span class="s">&quot;/chat&quot;</span><span class="p">,</span><span class="w"> </span><span class="nc">ChatController</span><span class="p">,</span><span class="w"> </span><span class="ss">:create</span><span class="w">
+</span><span class="k" data-group-id="1200050838-2">end</span></code></pre><p>Access the governance result in your controller:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyAppWeb.ChatController</span><span class="w"> </span><span class="k" data-group-id="1395238431-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">MyAppWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">create</span><span class="p" data-group-id="1395238431-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="1395238431-2">)</span><span class="w"> </span><span class="k" data-group-id="1395238431-3">do</span><span class="w">
+    </span><span class="n">receipt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">conn</span><span class="o">.</span><span class="n">assigns</span><span class="p" data-group-id="1395238431-4">[</span><span class="ss">:tork_receipt</span><span class="p" data-group-id="1395238431-4">]</span><span class="w">
+    </span><span class="n">governed_text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">conn</span><span class="o">.</span><span class="n">assigns</span><span class="p" data-group-id="1395238431-5">[</span><span class="ss">:tork_result</span><span class="p" data-group-id="1395238431-5">]</span><span class="o">.</span><span class="n">output</span><span class="w">
+
+    </span><span class="n">json</span><span class="p" data-group-id="1395238431-6">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1395238431-7">%{</span><span class="w">
+      </span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="n">governed_text</span><span class="p">,</span><span class="w">
+      </span><span class="ss">receipt_id</span><span class="p">:</span><span class="w"> </span><span class="n">receipt</span><span class="o">.</span><span class="n">receipt_id</span><span class="w">
+    </span><span class="p" data-group-id="1395238431-7">}</span><span class="p" data-group-id="1395238431-6">)</span><span class="w">
+  </span><span class="k" data-group-id="1395238431-3">end</span><span class="w">
+</span><span class="k" data-group-id="1395238431-1">end</span></code></pre><h3 id="controller-helpers" class="section-heading"><a href="#controller-helpers" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Controller Helpers</span></h3><p>Use the Phoenix adapter to govern params directly:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyAppWeb.UserController</span><span class="w"> </span><span class="k" data-group-id="6254214720-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">MyAppWeb</span><span class="p">,</span><span class="w"> </span><span class="ss">:controller</span><span class="w">
+  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">TorkGovernance.Adapters.Phoenix</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="nc">TorkPhoenix</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">create</span><span class="p" data-group-id="6254214720-2">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">params</span><span class="p" data-group-id="6254214720-2">)</span><span class="w"> </span><span class="k" data-group-id="6254214720-3">do</span><span class="w">
+    </span><span class="n">governed_params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">TorkPhoenix</span><span class="o">.</span><span class="n">govern_params</span><span class="p" data-group-id="6254214720-4">(</span><span class="n">params</span><span class="p" data-group-id="6254214720-4">)</span><span class="w">
+    </span><span class="c1"># governed_params has all string values redacted for PII</span><span class="w">
+
+    </span><span class="n">json</span><span class="p" data-group-id="6254214720-5">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6254214720-6">%{</span><span class="ss">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ok&quot;</span><span class="p" data-group-id="6254214720-6">}</span><span class="p" data-group-id="6254214720-5">)</span><span class="w">
+  </span><span class="k" data-group-id="6254214720-3">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">show</span><span class="p" data-group-id="6254214720-7">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="c">_params</span><span class="p" data-group-id="6254214720-7">)</span><span class="w"> </span><span class="k" data-group-id="6254214720-8">do</span><span class="w">
+    </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_user</span><span class="p" data-group-id="6254214720-9">(</span><span class="p" data-group-id="6254214720-9">)</span><span class="w">
+    </span><span class="n">governed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">TorkPhoenix</span><span class="o">.</span><span class="n">govern_response</span><span class="p" data-group-id="6254214720-10">(</span><span class="n">user</span><span class="p" data-group-id="6254214720-10">)</span><span class="w">
+    </span><span class="n">json</span><span class="p" data-group-id="6254214720-11">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">governed</span><span class="p" data-group-id="6254214720-11">)</span><span class="w">
+  </span><span class="k" data-group-id="6254214720-8">end</span><span class="w">
+</span><span class="k" data-group-id="6254214720-1">end</span></code></pre><h2 id="cryptographic-receipts" class="section-heading"><a href="#cryptographic-receipts" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Cryptographic Receipts</span></h2><p>Every governance operation generates a verifiable receipt:</p><pre><code class="makeup elixir" translate="no"><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">TorkGovernance</span><span class="o">.</span><span class="n">govern</span><span class="p" data-group-id="7548099948-1">(</span><span class="s">&quot;Sensitive data&quot;</span><span class="p" data-group-id="7548099948-1">)</span><span class="w">
+
+</span><span class="n">result</span><span class="o">.</span><span class="n">receipt</span><span class="o">.</span><span class="n">receipt_id</span><span class="w">   </span><span class="c1">#=&gt; &quot;rcpt_a1b2c3...&quot;</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">receipt</span><span class="o">.</span><span class="n">timestamp</span><span class="w">    </span><span class="c1">#=&gt; &quot;2026-02-08T12:00:00Z&quot;</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">receipt</span><span class="o">.</span><span class="n">input_hash</span><span class="w">   </span><span class="c1">#=&gt; &quot;sha256:9f86d08...&quot;</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">receipt</span><span class="o">.</span><span class="n">output_hash</span><span class="w">  </span><span class="c1">#=&gt; &quot;sha256:abc123...&quot;</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">receipt</span><span class="o">.</span><span class="n">pii_count</span><span class="w">    </span><span class="c1">#=&gt; 1</span><span class="w">
+</span><span class="n">result</span><span class="o">.</span><span class="n">receipt</span><span class="o">.</span><span class="n">action</span><span class="w">       </span><span class="c1">#=&gt; :redact</span></code></pre><h2 id="license" class="section-heading"><a href="#license" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">License</span></h2><p>MIT</p>
+
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+  </div>
+  <div class="bottom-actions-item">
+
+  </div>
+</div>
+    <footer class="footer">
+
+        <p>
+
+            <span class="line">
+              <a href="https://hex.pm/packages/tork_governance/0.1.0">Hex Package</a>
+
+              <a href="https://preview.hex.pm/preview/tork_governance/0.1.0">Hex Preview</a>
+
+                (<a href="https://preview.hex.pm/preview/tork_governance/0.1.0/show/README.md">current file</a>)
+
+            </span>
+
+          <span class="line">
+            <button class="a-main footer-button display-quick-switch" title="Go to package docs">
+              Go to package docs
+            </button>
+
+              <a href="llms.txt" target="_blank">
+                View llms.txt
+              </a>
+
+
+              <a href="tork_governance.epub">
+                Download ePub version
+              </a>
+
+          </span>
+        </p>
+
+        <p class="built-using">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.40.1) for the
+
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+        </p>
+
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>
