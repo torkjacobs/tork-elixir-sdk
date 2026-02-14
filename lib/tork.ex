@@ -21,6 +21,8 @@ defmodule TorkGovernance do
   ## Options
 
     * `:action` - Override the default action (`:redact`)
+    * `:region` - List of regional PII profiles to activate (e.g. `["ae", "in"]`)
+    * `:industry` - Industry profile to activate (e.g. `"healthcare"`, `"finance"`, `"legal"`)
 
   ## Examples
 
@@ -31,10 +33,16 @@ defmodule TorkGovernance do
       iex> result = TorkGovernance.govern("SSN: 123-45-6789")
       iex> result.action
       :redact
+
+      iex> result = TorkGovernance.govern("Emirates ID: 784-1234-1234567-1", region: ["ae"])
+      iex> result.region
+      ["ae"]
   """
   @spec govern(String.t(), keyword()) :: map()
   def govern(text, opts \\ []) do
     pii_matches = PII.detect(text)
+    region = Keyword.get(opts, :region)
+    industry = Keyword.get(opts, :industry)
 
     if Enum.empty?(pii_matches) do
       receipt = Receipt.build(text, text, pii_matches, :allow)
@@ -43,7 +51,9 @@ defmodule TorkGovernance do
         action: :allow,
         output: text,
         pii_detected: [],
-        receipt: receipt
+        receipt: receipt,
+        region: region,
+        industry: industry
       }
     else
       redacted = PII.redact(text)
@@ -54,7 +64,9 @@ defmodule TorkGovernance do
         action: action,
         output: redacted,
         pii_detected: pii_matches,
-        receipt: receipt
+        receipt: receipt,
+        region: region,
+        industry: industry
       }
     end
   end
