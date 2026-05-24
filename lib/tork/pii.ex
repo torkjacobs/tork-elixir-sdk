@@ -26,7 +26,7 @@ defmodule TorkGovernance.PII do
     Enum.flat_map(@patterns, fn {type, regex, _replacement} ->
       regex
       |> Regex.scan(text)
-      |> Enum.map(fn [match | _] -> %{type: type, match: match} end)
+      |> Enum.map(fn [_match | _] -> %{type: type, match: "[REDACTED]"} end)
     end)
   end
 
