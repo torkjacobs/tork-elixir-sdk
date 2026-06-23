@@ -83,13 +83,16 @@ defmodule TorkGovernance do
   end
 
   defp build_session_context(opts) do
-    ctx = %{
-      agent_id: Keyword.get(opts, :agent_id),
-      agent_role: Keyword.get(opts, :agent_role),
-      session_id: Keyword.get(opts, :session_id),
-      session_turn: Keyword.get(opts, :session_turn)
-    }
+    ctx =
+      %{
+        agent_id: Keyword.get(opts, :agent_id),
+        agent_role: Keyword.get(opts, :agent_role),
+        session_id: Keyword.get(opts, :session_id),
+        session_turn: Keyword.get(opts, :session_turn)
+      }
+      |> Enum.reject(fn {_k, v} -> is_nil(v) end)
+      |> Map.new()
 
-    if Enum.all?(Map.values(ctx), &is_nil/1), do: nil, else: ctx
+    if map_size(ctx) == 0, do: nil, else: ctx
   end
 end
