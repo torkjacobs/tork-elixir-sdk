@@ -59,13 +59,75 @@ redacted = TorkGovernance.PII.redact("SSN: 123-45-6789")
 
 ### Supported PII Types
 
+**Parity tier: TIER 1** -- this is the JS SDK's basic 10-type vocabulary,
+with JS-identical types and redaction labels. This SDK does not implement
+the Python SDK's additional regional-detector tier; the `region`/`industry`
+options on `govern/2` select which extra patterns are documented as
+available, not an Elixir-native regional pattern set.
+
 | Type | Example | Redaction |
 |------|---------|-----------|
 | SSN | 123-45-6789 | [SSN_REDACTED] |
+| Credit Card | 4111-1111-1111-1111 | [CARD_REDACTED] |
 | Email | john@example.com | [EMAIL_REDACTED] |
 | Phone | 555-123-4567 | [PHONE_REDACTED] |
-| Credit Card | 4111-1111-1111-1111 | [CREDIT_CARD_REDACTED] |
+| Address | 123 Main Street | [ADDRESS_REDACTED] |
 | IP Address | 192.168.1.1 | [IP_REDACTED] |
+| Date of Birth | 05/12/1990 | [DOB_REDACTED] |
+| Passport | AB1234567 | [PASSPORT_REDACTED] |
+| Driver's License | A12345678901 | [DL_REDACTED] |
+| Bank Account | 123456789 | [ACCOUNT_REDACTED] |
+
+## Scanning Tool Results
+
+A tool result returned by an MCP server -- or any external system you don't
+control -- is untrusted input about to be appended to a model's context.
+`TorkGovernance.scan_tool_result/3` scans it BEFORE that happens, entirely
+on-device, for two things:
+
+1. **PII**, using the same detector as `govern/2` (see above).
+2. **Prompt injection**, using a conservative heuristic pattern set. Every
+   injection finding is labelled `heuristic:<type>` so a downstream reader
+   of a receipt can never mistake a regex hit for a verified determination.
+   The ruleset (`tork-injection-heuristics-v1`) currently detects three
+   types: `instruction_override`, `role_reassignment`, `exfiltration_url`.
+
+This is a pure, synchronous, **zero-network** operation -- ported
+byte-for-byte (regex sources, receipt schema, action mapping) from the JS
+SDK's `tool-result-scan.ts`, so a receipt produced here has the same shape
+as one produced by the JS or Python SDKs. See
+`TorkGovernance.ToolResultScan` for the Elixir-specific implementation
+notes (regex/unicode handling, why there's no cycle guard, map key
+ordering).
+
+```elixir
+result = TorkGovernance.scan_tool_result(
+  "lookup_customer",
+  %{"content" => [%{"type" => "text", "text" => "Contact jane.doe@example.com"}]},
+  server_uri: "mcp://crm.internal/customers"
+)
+
+result.action     #=> :redact  (:allow | :redact | :escalate | :deny)
+result.sanitized  #=> payload with PII masked in place
+result.receipt.tool_result_scan
+#=> %{
+#     attested_by: "client",
+#     blocked: false,
+#     capture_mode: "edge",
+#     findings: %{injection: %{}, pii: %{"email" => 1}},
+#     injection_ruleset: "tork-injection-heuristics-v1",
+#     sdk_language: "elixir",
+#     sdk_version: "0.2.0",
+#     server_uri: "mcp://crm.internal/customers",
+#     tool_name: "lookup_customer",
+#     totals: %{injection: 0, pii: 1}
+#   }
+```
+
+Pass `block_on_injection: true` to have the scan refuse to hand back a
+payload at all when an injection heuristic fires -- `result.action` becomes
+`:deny`, `result.sanitized` is `nil`, and `result.reason` explains why
+(without ever quoting the flagged text back).
 
 ## Phoenix Integration
 

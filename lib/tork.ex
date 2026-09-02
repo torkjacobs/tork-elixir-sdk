@@ -12,6 +12,9 @@ defmodule TorkGovernance do
 
   alias TorkGovernance.PII
   alias TorkGovernance.Receipt
+  alias TorkGovernance.ToolResultScan
+
+  @sdk_version Mix.Project.config()[:version]
 
   @doc """
   Apply governance rules to the input text.
@@ -80,6 +83,74 @@ defmodule TorkGovernance do
         session_context: session_context
       }
     end
+  end
+
+  @doc """
+  Scan a tool result (e.g. an MCP tool call's return payload) for PII and
+  prompt injection before it is appended to a model's context, and record
+  the scan on a governance receipt (DECIDED-TACT2-V2-C).
+
+  Wraps `TorkGovernance.ToolResultScan.scan/3` -- which does the actual
+  work and is directly usable standalone -- and additionally maps the
+  outcome to a governance `:action`:
+
+    * `:deny` -- `:block_on_injection` was true and an injection heuristic fired.
+    * `:escalate` -- an injection heuristic fired (and blocking was not requested).
+    * `:redact` -- only PII was found.
+    * `:allow` -- nothing found.
+
+  and attaches a `tool_result_scan` block (`attested_by: "client"`,
+  `capture_mode: "edge"`) to the receipt.
+
+  ## Options
+
+    * `:server_uri` - URI of the MCP server (or other origin). Recorded on
+      the receipt block when present.
+    * `:block_on_injection` - default `false`. See `TorkGovernance.ToolResultScan.scan/3`.
+    * `:max_depth` - default 32.
+
+  ## Examples
+
+      iex> result = TorkGovernance.scan_tool_result("lookup_customer", %{"text" => "jane.doe@example.com"})
+      iex> result.action
+      :redact
+  """
+  @spec scan_tool_result(String.t(), term(), keyword()) :: map()
+  def scan_tool_result(tool_name, payload, opts \\ []) do
+    result = ToolResultScan.scan(tool_name, payload, opts)
+
+    action =
+      cond do
+        result.blocked -> :deny
+        ToolResultScan.injection_count(result.findings) > 0 -> :escalate
+        ToolResultScan.pii_count(result.findings) > 0 -> :redact
+        true -> :allow
+      end
+
+    block =
+      ToolResultScan.build_receipt_block(tool_name, result, @sdk_version,
+        server_uri: Keyword.get(opts, :server_uri)
+      )
+
+    receipt = %{
+      receipt_id: Receipt.generate_id(),
+      timestamp: DateTime.utc_now() |> DateTime.to_iso8601(),
+      input_hash: Receipt.hash(ToolResultScan.canonicalize(payload)),
+      output_hash: Receipt.hash(ToolResultScan.canonicalize(result.sanitized)),
+      pii_count: ToolResultScan.pii_count(result.findings),
+      pii_types: ToolResultScan.pii_types(result.findings),
+      action: action,
+      tool_result_scan: block
+    }
+
+    %{
+      action: action,
+      sanitized: result.sanitized,
+      findings: result.findings,
+      blocked: result.blocked,
+      reason: result.reason,
+      receipt: receipt
+    }
   end
 
   defp build_session_context(opts) do
