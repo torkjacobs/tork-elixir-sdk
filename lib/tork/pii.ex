@@ -1,4 +1,6 @@
 defmodule TorkGovernance.PII do
+  alias TorkGovernance.PII.Country
+
   @moduledoc """
   PII detection and redaction using regex patterns.
 
@@ -67,15 +69,109 @@ defmodule TorkGovernance.PII do
   @doc """
   Redact all PII in the given text, replacing matches with type-specific placeholders.
 
+  REDACTION IS ONE PASS. Until 0.2.0 this reduced over the patterns, each
+  `Regex.replace` running over the string the previous pattern had already
+  rewritten. Two types matching overlapping spans could leave half an identifier
+  standing beside a redaction token -- digits exposed in output the caller had
+  been told was redacted. Every match is now collected against the original
+  text, overlaps are resolved before anything is rewritten, and the surviving
+  spans are spliced right to left in a single pass.
+
   ## Examples
 
       iex> TorkGovernance.PII.redact("SSN: 123-45-6789")
       "SSN: [SSN_REDACTED]"
   """
   @spec redact(String.t()) :: String.t()
-  def redact(text) do
-    Enum.reduce(@patterns, text, fn {_type, regex, replacement}, acc ->
-      Regex.replace(regex, acc, replacement)
-    end)
+  def redact(text), do: detect_and_redact(text).redacted_text
+
+  @doc """
+  Detect PII and return matches, the redacted text, and the country layer's
+  findings in one call.
+
+  `regions` forces a set of country profiles on, case-insensitively; `nil` or
+  `[]` infers them from the content.
+
+  Returns a map with `:has_pii`, `:types`, `:count`, `:matches`,
+  `:redacted_text`, `:country_matches`, `:country_labels` and `:regions`.
+  """
+  @spec detect_and_redact(String.t(), [String.t()] | nil) :: map()
+  def detect_and_redact(text, regions \\ nil) do
+    l0 =
+      Enum.flat_map(@patterns, fn {type, regex, replacement} ->
+        regex
+        |> Regex.scan(text, return: :index, capture: :first)
+        |> List.flatten()
+        |> Enum.reject(fn {_start, len} -> len == 0 end)
+        |> Enum.map(fn {start, len} ->
+          %{type: type, start: start, stop: start + len, redaction: replacement}
+        end)
+      end)
+
+    active_regions =
+      if is_list(regions) and regions != [] do
+        Enum.map(regions, &String.upcase/1)
+      else
+        Country.infer_regions(text)
+      end
+
+    country_matches = Country.detect(text, Country.patterns_for_regions(active_regions))
+
+    # Resolve overlaps before anything is rewritten. A country identifier
+    # supersedes any L0 span it fully contains -- the cloud does the same,
+    # which is how a Saudi national ID stops coming back as [PHONE_REDACTED].
+    claimed0 = Enum.map(country_matches, &{&1.start_index, &1.end_index})
+
+    spans0 =
+      Enum.map(country_matches, fn c ->
+        %{start_index: c.start_index, end_index: c.end_index, redaction: c.redaction}
+      end)
+
+    {_claimed, spans, kept} =
+      Enum.reduce(l0, {claimed0, spans0, []}, fn hit, {claimed, spans, kept} ->
+        overlapping =
+          Enum.filter(claimed, fn {rs, re} -> hit.start < re and hit.stop > rs end)
+
+        cond do
+          overlapping == [] ->
+            {claimed ++ [{hit.start, hit.stop}],
+             spans ++ [%{start_index: hit.start, end_index: hit.stop, redaction: hit.redaction}],
+             kept ++ [%{type: hit.type, match: "[REDACTED]"}]}
+
+          not Enum.all?(overlapping, fn {rs, re} ->
+            {cs, ce} = Country.trimmed_core(text, rs, re)
+            hit.start <= cs and hit.stop >= ce
+          end) ->
+            {claimed, spans, kept}
+
+          # An L0 span that fully contains a country span still loses: the
+          # country label is the more specific claim.
+          Enum.any?(overlapping, fn {rs, re} ->
+            Enum.any?(country_matches, &(&1.start_index == rs and &1.end_index == re))
+          end) ->
+            {claimed, spans, kept}
+
+          true ->
+            claimed = Enum.reject(claimed, &(&1 in overlapping))
+
+            spans =
+              Enum.reject(spans, fn s -> {s.start_index, s.end_index} in overlapping end)
+
+            {claimed ++ [{hit.start, hit.stop}],
+             spans ++ [%{start_index: hit.start, end_index: hit.stop, redaction: hit.redaction}],
+             kept ++ [%{type: hit.type, match: "[REDACTED]"}]}
+        end
+      end)
+
+    %{
+      has_pii: kept != [] or country_matches != [],
+      types: kept |> Enum.map(& &1.type) |> Enum.uniq(),
+      count: length(kept) + length(country_matches),
+      matches: kept,
+      redacted_text: Country.apply_redactions(text, spans),
+      country_matches: country_matches,
+      country_labels: country_matches |> Enum.map(& &1.label) |> Enum.uniq(),
+      regions: active_regions
+    }
   end
 end
