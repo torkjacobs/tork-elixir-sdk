@@ -106,6 +106,19 @@ available, not an Elixir-native regional pattern set.
 | Driver's License | A12345678901 | [DL_REDACTED] |
 | Bank Account | 123456789 | [ACCOUNT_REDACTED] |
 
+## Agent Telemetry Fields
+
+`govern/2` accepts four optional fields describing the calling agent. They are
+returned under `result.session_context` when set and omitted when not
+(`session_context` is `nil` if none are given).
+
+```elixir
+result = TorkGovernance.govern("hello",
+  agent_id: "agent-1", agent_role: "worker", session_id: "s-42", session_turn: 3)
+result.session_context
+#=> %{agent_id: "agent-1", agent_role: "worker", session_id: "s-42", session_turn: 3}
+```
+
 ## Scanning Tool Results
 
 A tool result returned by an MCP server -- or any external system you don't
