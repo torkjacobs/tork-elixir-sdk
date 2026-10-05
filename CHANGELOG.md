@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0 - 2026-10-03
+
+### Added
+- Agent telemetry fields on `TorkGovernance.govern/2`: optional `:agent_id`,
+  `:agent_role`, `:session_id` and `:session_turn` (integer). Passed through
+  on the result's `session_context` when set, omitted when not (`nil` if none
+  are set). New `session_context_test.exs`.
+- Per-type tests: every declared PII type now has a positive and a negative
+  example, plus a parity test that every declared type has a live pattern.
+
+### PII types
+- No change to the declared list: all 10 basic types (ssn, credit_card, email,
+  phone, address, ip_address, date_of_birth, passport, drivers_license,
+  bank_account) have patterns. None removed.
+
 ## 0.3.0 - 2026-09-25
 
 ### Added

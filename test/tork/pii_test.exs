@@ -30,6 +30,36 @@ defmodule TorkGovernance.PIITest do
     assert Enum.sort(PII.types()) == Enum.sort(@js_basic_pii_types)
   end
 
+  # Every declared type needs a positive and a negative example (S01).
+  @examples %{
+    ssn: {"SSN 123-45-6789", "SSN 123-456-789"},
+    credit_card: {"Card 4111 1111 1111 1111", "Card 4111 1111 1111"},
+    email: {"Mail jane@example.com", "Mail jane at example dot com"},
+    phone: {"Call (555) 123-4567", "Call 555-1234"},
+    address: {"Lives at 42 Oak Avenue", "Lives near the Oak Avenue"},
+    ip_address: {"Host 10.0.0.255", "Host 10.0.0.256.1"},
+    date_of_birth: {"DOB 12/31/1985", "DOB 13/31/1985"},
+    passport: {"Passport XY7654321", "Passport xy7654321"},
+    drivers_license: {"DL B1234567890", "DL 1234567890B"},
+    bank_account: {"Acct 12345678", "Acct 1234567"}
+  }
+
+  test "every declared type has a positive and a negative example" do
+    assert Enum.sort(Map.keys(@examples)) == Enum.sort(PII.types())
+  end
+
+  for {type, _} <- Map.to_list(@examples) do
+    test "#{type}: detects positive example" do
+      {pos, _} = @examples[unquote(type)]
+      assert unquote(type) in Enum.map(PII.detect(pos), & &1.type)
+    end
+
+    test "#{type}: does not detect negative example" do
+      {_, neg} = @examples[unquote(type)]
+      refute unquote(type) in Enum.map(PII.detect(neg), & &1.type)
+    end
+  end
+
   describe "JS-identical redaction labels" do
     test "ssn" do
       assert PII.redact("SSN: 123-45-6789") == "SSN: [SSN_REDACTED]"
